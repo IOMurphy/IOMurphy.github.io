@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html style="display: none;" lang="zh">
+    <head>
+    <meta charset="utf-8">
+    <!--
+        © Material Theme
+        https://github.com/viosey/hexo-theme-material
+        Version: 1.5.2 -->
+    <script>
+        window.materialVersion = "1.5.2"
+        // Delete localstorage with these tags
+        window.oldVersion = [
+            'codestartv1',
+            '1.3.4',
+            '1.4.0',
+            '1.4.0b1',
+            '1.5.0'
+        ]
+    </script>
+
+    <!-- dns prefetch -->
+    <meta http-equiv="x-dns-prefetch-control" content="on">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Meta & Info -->
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!-- Title -->
+    
+    <title>
+        
+            Java中的SPI扩展机制 | 
+        
+        Murphy&#39;s Blog
+    </title>
+
+    <!-- Favicons -->
+    <link rel="icon shortcut" type="image/ico" href="/img/favicon.png">
+    <link rel="icon" href="/img/favicon.png">
+
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="description" itemprop="description" content="">
+    <meta name="keywords" content=",SPI">
+    <meta name="theme-color" content="#0097A7">
+
+    <!-- Disable Fucking Bloody Baidu Tranformation -->
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+
+    <!--[if lte IE 9]>
+        <link rel="stylesheet" href="/css/ie-blocker.css">
+
+        
+            <script src="/js/ie-blocker.zhCN.js"></script>
+        
+    <![endif]-->
+
+    <!-- Import lsloader -->
+    <script>(function(){window.lsloader={jsRunSequence:[],jsnamemap:{},cssnamemap:{}};lsloader.removeLS=function(a){try{localStorage.removeItem(a)}catch(b){}};lsloader.setLS=function(a,c){try{localStorage.setItem(a,c)}catch(b){}};lsloader.getLS=function(a){var c="";try{c=localStorage.getItem(a)}catch(b){c=""}return c};versionString="/*"+(window.materialVersion||"unknownVersion")+"*/";lsloader.clean=function(){try{var b=[];for(var a=0;a<localStorage.length;a++){b.push(localStorage.key(a))}b.forEach(function(e){var f=lsloader.getLS(e);if(window.oldVersion){var d=window.oldVersion.reduce(function(g,h){return g||f.indexOf("/*"+h+"*/")!==-1},false);if(d){lsloader.removeLS(e)}}})}catch(c){}};lsloader.clean();lsloader.load=function(f,a,b,d){if(typeof b==="boolean"){d=b;b=undefined}d=d||false;b=b||function(){};var e;e=this.getLS(f);if(e&&e.indexOf(versionString)===-1){this.removeLS(f);this.requestResource(f,a,b,d);return}if(e){var c=e.split(versionString)[0];if(c!=a){console.log("reload:"+a);this.removeLS(f);this.requestResource(f,a,b,d);return}e=e.split(versionString)[1];if(d){this.jsRunSequence.push({name:f,code:e});this.runjs(a,f,e)}else{document.getElementById(f).appendChild(document.createTextNode(e));b()}}else{this.requestResource(f,a,b,d)}};lsloader.requestResource=function(b,e,a,c){var d=this;if(c){this.iojs(e,b,function(h,f,g){d.setLS(f,h+versionString+g);d.runjs(h,f,g)})}else{this.iocss(e,b,function(f){document.getElementById(b).appendChild(document.createTextNode(f));d.setLS(b,e+versionString+f)},a)}};lsloader.iojs=function(d,b,g){var a=this;a.jsRunSequence.push({name:b,code:""});try{var f=new XMLHttpRequest();f.open("get",d,true);f.onreadystatechange=function(){if(f.readyState==4){if((f.status>=200&&f.status<300)||f.status==304){if(f.response!=""){g(d,b,f.response);return}}a.jsfallback(d,b)}};f.send(null)}catch(c){a.jsfallback(d,b)}};lsloader.iocss=function(f,c,h,a){var b=this;try{var g=new XMLHttpRequest();g.open("get",f,true);g.onreadystatechange=function(){if(g.readyState==4){if((g.status>=200&&g.status<300)||g.status==304){if(g.response!=""){h(g.response);a();return}}b.cssfallback(f,c,a)}};g.send(null)}catch(d){b.cssfallback(f,c,a)}};lsloader.iofonts=function(f,c,h,a){var b=this;try{var g=new XMLHttpRequest();g.open("get",f,true);g.onreadystatechange=function(){if(g.readyState==4){if((g.status>=200&&g.status<300)||g.status==304){if(g.response!=""){h(g.response);a();return}}b.cssfallback(f,c,a)}};g.send(null)}catch(d){b.cssfallback(f,c,a)}};lsloader.runjs=function(f,c,e){if(!!c&&!!e){for(var b in this.jsRunSequence){if(this.jsRunSequence[b].name==c){this.jsRunSequence[b].code=e}}}if(!!this.jsRunSequence[0]&&!!this.jsRunSequence[0].code&&this.jsRunSequence[0].status!="failed"){var a=document.createElement("script");a.appendChild(document.createTextNode(this.jsRunSequence[0].code));a.type="text/javascript";document.getElementsByTagName("head")[0].appendChild(a);this.jsRunSequence.shift();if(this.jsRunSequence.length>0){this.runjs()}}else{if(!!this.jsRunSequence[0]&&this.jsRunSequence[0].status=="failed"){var d=this;var a=document.createElement("script");a.src=this.jsRunSequence[0].path;a.type="text/javascript";this.jsRunSequence[0].status="loading";a.onload=function(){d.jsRunSequence.shift();if(d.jsRunSequence.length>0){d.runjs()}};document.body.appendChild(a)}}};lsloader.tagLoad=function(b,a){this.jsRunSequence.push({name:a,code:"",path:b,status:"failed"});this.runjs()};lsloader.jsfallback=function(c,b){if(!!this.jsnamemap[b]){return}else{this.jsnamemap[b]=b}for(var a in this.jsRunSequence){if(this.jsRunSequence[a].name==b){this.jsRunSequence[a].code="";this.jsRunSequence[a].status="failed";this.jsRunSequence[a].path=c}}this.runjs()};lsloader.cssfallback=function(e,c,b){if(!!this.cssnamemap[c]){return}else{this.cssnamemap[c]=1}var d=document.createElement("link");d.type="text/css";d.href=e;d.rel="stylesheet";d.onload=d.onerror=b;var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(d,a)};lsloader.runInlineScript=function(c,b){var a=document.getElementById(b).innerText;this.jsRunSequence.push({name:c,code:a});this.runjs()}})();</script>
+
+    <!-- Import queue -->
+    <script>function Queue(){this.dataStore=[];this.offer=b;this.poll=d;this.execNext=a;this.debug=false;this.startDebug=c;function b(e){if(this.debug){console.log("Offered a Queued Function.")}if(typeof e==="function"){this.dataStore.push(e)}else{console.log("You must offer a function.")}}function d(){if(this.debug){console.log("Polled a Queued Function.")}return this.dataStore.shift()}function a(){var e=this.poll();if(e!==undefined){if(this.debug){console.log("Run a Queued Function.")}e()}}function c(){this.debug=true}}var queue=new Queue();</script>
+
+    <!-- Import CSS -->
+    
+        <style id="material_css"></style><script>if(typeof window.lsLoadCSSMaxNums === "undefined")window.lsLoadCSSMaxNums = 0;window.lsLoadCSSMaxNums++;lsloader.load("material_css","/css/material.min.css?Z7a72R1E4SxzBKR/WGctOA==",function(){if(typeof window.lsLoadCSSNums === "undefined")window.lsLoadCSSNums = 0;window.lsLoadCSSNums++;if(window.lsLoadCSSNums == window.lsLoadCSSMaxNums)document.documentElement.style.display="";}, false)</script>
+        <style id="style_css"></style><script>if(typeof window.lsLoadCSSMaxNums === "undefined")window.lsLoadCSSMaxNums = 0;window.lsLoadCSSMaxNums++;lsloader.load("style_css","/css/style.min.css?7WfZmZ/QK26z/Hv+PqMiMw==",function(){if(typeof window.lsLoadCSSNums === "undefined")window.lsLoadCSSNums = 0;window.lsLoadCSSNums++;if(window.lsLoadCSSNums == window.lsLoadCSSMaxNums)document.documentElement.style.display="";}, false)</script>
+
+        
+            
+                <style id="prettify_css"></style><script>if(typeof window.lsLoadCSSMaxNums === "undefined")window.lsLoadCSSMaxNums = 0;window.lsLoadCSSMaxNums++;lsloader.load("prettify_css","/css/prettify.min.css?zp8STOU9v89XWFEnN+6YmQ==",function(){if(typeof window.lsLoadCSSNums === "undefined")window.lsLoadCSSNums = 0;window.lsLoadCSSNums++;if(window.lsLoadCSSNums == window.lsLoadCSSMaxNums)document.documentElement.style.display="";}, false)</script>
+                <style id="prettify_theme"></style><script>if(typeof window.lsLoadCSSMaxNums === "undefined")window.lsLoadCSSMaxNums = 0;window.lsLoadCSSMaxNums++;lsloader.load("prettify_theme","/css/prettify/tomorrow-night-bright.min.css?8VgE6WqhtH02IzxbAnMvKA==",function(){if(typeof window.lsLoadCSSNums === "undefined")window.lsLoadCSSNums = 0;window.lsLoadCSSNums++;if(window.lsLoadCSSNums == window.lsLoadCSSMaxNums)document.documentElement.style.display="";}, false)</script>
+            
+        
+
+    
+
+    
+
+    <!-- Config CSS -->
+
+<!-- Other Styles -->
+<style>
+  body, html {
+    font-family: Roboto, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+    overflow-x: hidden !important;
+  }
+  
+  code {
+    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  }
+
+  a {
+    color: #00838F;
+  }
+
+  .mdl-card__media,
+  #search-label,
+  #search-form-label:after,
+  #scheme-Paradox .hot_tags-count,
+  #scheme-Paradox .sidebar_archives-count,
+  #scheme-Paradox .sidebar-colored .sidebar-header,
+  #scheme-Paradox .sidebar-colored .sidebar-badge{
+    background-color: #0097A7 !important;
+  }
+
+  /* Sidebar User Drop Down Menu Text Color */
+  #scheme-Paradox .sidebar-colored .sidebar-nav>.dropdown>.dropdown-menu>li>a:hover,
+  #scheme-Paradox .sidebar-colored .sidebar-nav>.dropdown>.dropdown-menu>li>a:focus {
+    color: #0097A7 !important;
+  }
+
+  #post_entry-right-info,
+  .sidebar-colored .sidebar-nav li:hover > a,
+  .sidebar-colored .sidebar-nav li:hover > a i,
+  .sidebar-colored .sidebar-nav li > a:hover,
+  .sidebar-colored .sidebar-nav li > a:hover i,
+  .sidebar-colored .sidebar-nav li > a:focus i,
+  .sidebar-colored .sidebar-nav > .open > a,
+  .sidebar-colored .sidebar-nav > .open > a:hover,
+  .sidebar-colored .sidebar-nav > .open > a:focus,
+  #ds-reset #ds-ctx .ds-ctx-entry .ds-ctx-head a {
+    color: #0097A7 !important;
+  }
+
+  .toTop {
+    background: #757575 !important;
+  }
+
+  .material-layout .material-post>.material-nav,
+  .material-layout .material-index>.material-nav,
+  .material-nav a {
+    color: #757575;
+  }
+
+  #scheme-Paradox .MD-burger-layer {
+    background-color: #757575;
+  }
+
+  #scheme-Paradox #post-toc-trigger-btn {
+    color: #757575;
+  }
+
+  .post-toc a:hover {
+    color: #00838F;
+    text-decoration: underline;
+  }
+
+</style>
+
+
+<!-- Theme Background Related-->
+
+    <style>
+      body{
+        background-color: #F5F5F5;
+      }
+
+      /* blog_info bottom background */
+      #scheme-Paradox .material-layout .something-else .mdl-card__supporting-text{
+        background-color: #fff;
+      }
+    </style>
+
+
+
+
+<!-- Fade Effect -->
+
+    <style>
+      .fade {
+        transition: all 800ms linear;
+        -webkit-transform: translate3d(0,0,0);
+        -moz-transform: translate3d(0,0,0);
+        -ms-transform: translate3d(0,0,0);
+        -o-transform: translate3d(0,0,0);
+        transform: translate3d(0,0,0);
+        opacity: 1;
+      }
+
+      .fade.out{
+        opacity: 0;
+      }
+    </style>
+
+
+<!-- Import Font -->
+<!-- Import Roboto -->
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+
+
+<!-- Import Material Icons -->
+
+
+    <style id="material_icons"></style><script>if(typeof window.lsLoadCSSMaxNums === "undefined")window.lsLoadCSSMaxNums = 0;window.lsLoadCSSMaxNums++;lsloader.load("material_icons","/css/material-icons.css?pqhB/Rd/ab0H2+kZp0RDmw==",function(){if(typeof window.lsLoadCSSNums === "undefined")window.lsLoadCSSNums = 0;window.lsLoadCSSNums++;if(window.lsLoadCSSNums == window.lsLoadCSSMaxNums)document.documentElement.style.display="";}, false)</script>
+
+
+
+
+    <!-- Import jQuery -->
+    
+        <script>lsloader.load("jq_js","/js/jquery.min.js?ezyEvm8ST5CGfpA+kFFi1g==", true)</script>
+    
+
+    <!-- WebAPP Icons -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Murphy&#39;s Blog">
+    <meta name="msapplication-starturl" content="http://iomurphy.github.io/2021/03/20/Java%E4%B8%AD%E7%9A%84SPI%E6%89%A9%E5%B1%95%E6%9C%BA%E5%88%B6/">
+    <meta name="msapplication-navbutton-color" content="#0097A7">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Murphy&#39;s Blog">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon" href="/img/favicon.png">
+
+    <!-- Site Verification -->
+    
+    
+
+    <!-- RSS -->
+    
+
+    <!-- The Open Graph protocol -->
+    <meta property="og:url" content="http://iomurphy.github.io/2021/03/20/Java%E4%B8%AD%E7%9A%84SPI%E6%89%A9%E5%B1%95%E6%9C%BA%E5%88%B6/">
+    <meta property="og:type" content="blog">
+    <meta property="og:title" content="Java中的SPI扩展机制 | Murphy&#39;s Blog">
+    <meta property="og:image" content="/img/favicon.png">
+    <meta property="og:description" content="">
+    <meta property="og:article:tag" content="SPI"> 
+
+    
+        <meta property="article:published_time" content="Sat Mar 20 2021 21:25:36 GMT+0800">
+        <meta property="article:modified_time" content="Tue Apr 13 2021 09:47:05 GMT+0800">
+    
+
+    <!-- The Twitter Card protocol -->
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- Add canonical link for SEO -->
+    
+        <link rel="canonical" href="http://iomurphy.github.io/2021/03/20/Java%E4%B8%AD%E7%9A%84SPI%E6%89%A9%E5%B1%95%E6%9C%BA%E5%88%B6/index.html" />
+    
+
+    <!-- Structured-data for SEO -->
+    
+        
+
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "mainEntityOfPage": "http://iomurphy.github.io/2021/03/20/Java%E4%B8%AD%E7%9A%84SPI%E6%89%A9%E5%B1%95%E6%9C%BA%E5%88%B6/index.html",
+    "headline": "Java中的SPI扩展机制",
+    "datePublished": "Sat Mar 20 2021 21:25:36 GMT+0800",
+    "dateModified": "Tue Apr 13 2021 09:47:05 GMT+0800",
+    "author": {
+        "@type": "Person",
+        "name": "Murphy",
+        "image": {
+            "@type": "ImageObject",
+            "url": "/img/avatar.jpg"
+        },
+        "description": "Hi, nice to meet you"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "Murphy&#39;s Blog",
+        "logo": {
+            "@type":"ImageObject",
+            "url": "/img/favicon.png"
+        }
+    },
+    "keywords": ",SPI",
+    "description": "",
+}
+</script>
+
+
+    
+
+    <!-- Analytics -->
+    
+    
+    
+
+    <!-- Custom Head -->
+    
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+    
+        <body id="scheme-Paradox" class="lazy">
+            <div class="material-layout  mdl-js-layout has-drawer is-upgraded">
+                
+
+                <!-- Main Container -->
+                <main class="material-layout__content" id="main">
+
+                    <!-- Top Anchor -->
+                    <div id="top"></div>
+
+                    
+                        <!-- Hamburger Button -->
+                        <button class="MD-burger-icon sidebar-toggle">
+                            <span class="MD-burger-layer"></span>
+                        </button>
+                    
+
+                    <!-- Post TOC -->
+
+    
+    <!-- Back Button -->
+    <!--
+    <div class="material-back" id="backhome-div" tabindex="0">
+        <a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
+           href="#" onclick="window.history.back();return false;"
+           target="_self"
+           role="button"
+           data-upgraded=",MaterialButton,MaterialRipple">
+            <i class="material-icons" role="presentation">arrow_back</i>
+            <span class="mdl-button__ripple-container">
+                <span class="mdl-ripple"></span>
+            </span>
+        </a>
+    </div>
+    -->
+
+
+    <!-- Left aligned menu below button -->
+    
+    
+    <button id="post-toc-trigger-btn"
+        class="mdl-button mdl-js-button mdl-button--icon">
+        <i class="material-icons">format_list_numbered</i>
+    </button>
+
+    <ul class="post-toc-wrap mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="post-toc-trigger-btn" style="max-height:80vh; overflow-y:scroll;">
+        <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFSPI"><span class="post-toc-number">1.</span> <span class="post-toc-text">什么是SPI</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#SPI%E5%92%8CAPI%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="post-toc-number">2.</span> <span class="post-toc-text">SPI和API的使用场景</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Java%E4%B8%AD%E7%9A%84SPI"><span class="post-toc-number">3.</span> <span class="post-toc-text">Java中的SPI</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#SPI%E7%9A%84%E7%AE%80%E5%8D%95%E7%A4%BA%E4%BE%8B"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">SPI的简单示例</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#SPI%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">SPI原理解析</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#spring-boot%E7%9A%84spi%E6%9C%BA%E5%88%B6"><span class="post-toc-number">4.</span> <span class="post-toc-text">spring boot的spi机制</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#SpringBootApplication"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">@SpringBootApplication</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#EnableAutoConfiguration"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">@EnableAutoConfiguration</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#SpringFactoriesLoader"><span class="post-toc-number">4.3.</span> <span class="post-toc-text">SpringFactoriesLoader</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E6%80%BB%E7%BB%93"><span class="post-toc-number">5.</span> <span class="post-toc-text">总结</span></a></li></ol>
+    </ul>
+    
+
+
+
+
+<!-- Layouts -->
+
+    <!-- Post Module -->
+    <div class="material-post_container">
+
+        <div class="material-post mdl-grid">
+            <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
+
+                <!-- Post Header(Thumbnail & Title) -->
+                
+    <!-- Paradox Post Header -->
+    
+        
+            <!-- Random Thumbnail -->
+            <div class="post_thumbnail-random mdl-card__media mdl-color-text--grey-50">
+            <script type="text/ls-javascript" id="post-thumbnail-script">
+    var randomNum = Math.floor(Math.random() * 19 + 1);
+
+    $('.post_thumbnail-random').attr('data-original', '/img/random/material-' + randomNum + '.png');
+    $('.post_thumbnail-random').addClass('lazy');
+</script>
+
+        
+    
+            <p class="article-headline-p">
+                Java中的SPI扩展机制
+            </p>
+        </div>
+
+
+
+
+
+                
+                    <!-- Paradox Post Info -->
+                    <div class="mdl-color-text--grey-700 mdl-card__supporting-text meta">
+
+    <!-- Author Avatar -->
+    <div id="author-avatar">
+        <img src="/img/avatar.jpg" width="44px" height="44px" alt="Author Avatar"/>
+    </div>
+    <!-- Author Name & Date -->
+    <div>
+        <strong>Murphy</strong>
+        <span>3月 20, 2021</span>
+    </div>
+
+    <div class="section-spacer"></div>
+
+    <!-- Favorite -->
+    <!--
+        <button id="article-functions-like-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon btn-like">
+            <i class="material-icons" role="presentation">favorite</i>
+            <span class="visuallyhidden">favorites</span>
+        </button>
+    -->
+
+    <!-- Qrcode -->
+    
+
+    <!-- Tags (bookmark) -->
+    
+    <button id="article-functions-viewtags-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+        <i class="material-icons" role="presentation">bookmark</i>
+        <span class="visuallyhidden">bookmark</span>
+    </button>
+    <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-viewtags-button">
+        <li class="mdl-menu__item">
+        <a class="post_tag-none-link" href="/tags/SPI/" rel="tag">SPI</a>
+    </ul>
+    
+
+    <!-- Share -->
+    
+        <button id="article-fuctions-share-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+    <i class="material-icons" role="presentation">share</i>
+    <span class="visuallyhidden">share</span>
+</button>
+<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-fuctions-share-button">
+    
+
+    
+
+    <!-- Share Weibo -->
+    
+        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=Java中的SPI扩展机制&url=http://iomurphy.github.io/2021/03/20/Java%E4%B8%AD%E7%9A%84SPI%E6%89%A9%E5%B1%95%E6%9C%BA%E5%88%B6/index.html&pic=http://iomurphy.github.io/img/favicon.png&searchPic=false&style=simple" target="_blank">
+            <li class="mdl-menu__item">
+                分享到微博
+            </li>
+        </a>
+    
+
+    <!-- Share Twitter -->
+    
+        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=Java中的SPI扩展机制&url=http://iomurphy.github.io/2021/03/20/Java%E4%B8%AD%E7%9A%84SPI%E6%89%A9%E5%B1%95%E6%9C%BA%E5%88%B6/index.html&via=Murphy" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Twitter
+            </li>
+        </a>
+    
+
+    <!-- Share Facebook -->
+    
+        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=http://iomurphy.github.io/2021/03/20/Java%E4%B8%AD%E7%9A%84SPI%E6%89%A9%E5%B1%95%E6%9C%BA%E5%88%B6/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Facebook
+            </li>
+        </a>
+    
+
+    <!-- Share Google+ -->
+    
+        <a class="post_share-link" href="https://plus.google.com/share?url=http://iomurphy.github.io/2021/03/20/Java%E4%B8%AD%E7%9A%84SPI%E6%89%A9%E5%B1%95%E6%9C%BA%E5%88%B6/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Google+
+            </li>
+        </a>
+    
+
+    <!-- Share LinkedIn -->
+    
+
+    <!-- Share QQ -->
+    
+
+    <!-- Share Telegram -->
+    
+</ul>
+
+    
+</div>
+
+                
+
+                <!-- Post Content -->
+                <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
+    
+        <h3 id="什么是SPI"><a href="#什么是SPI" class="headerlink" title="什么是SPI"></a>什么是SPI</h3><p>   SPI全称Service Provider Interface，是Java提供的一套用来被第三方实现或者扩展的接口，它可以用来启用框架扩展和替换组件。 SPI的作用就是为这些被扩展的API寻找服务实现。</p>
+<h3 id="SPI和API的使用场景"><a href="#SPI和API的使用场景" class="headerlink" title="SPI和API的使用场景"></a>SPI和API的使用场景</h3><p>  API （<code>Application Programming Interface）</code>在大多数情况下，都是实现方制定接口并完成对接口的实现，<code>调用方</code>仅仅依赖接口调用，有时候无权选择不同实现，但有时可以通过继承、实现接口等自定义实现，如果是final || 非public，则无法自定义实现。 从使用人员上来说，API 直接被应用开发人员使用。</p>
+<p>  SPI （<code>Service Provider Interface）</code>是调用方来制定接口规范，提供给外部来实现，调用方在调用时则选择自己需要的外部实现。 从使用人员上来说，SPI 被框架扩展人员使用。</p>
+<h3 id="Java中的SPI"><a href="#Java中的SPI" class="headerlink" title="Java中的SPI"></a>Java中的SPI</h3><h4 id="SPI的简单示例"><a href="#SPI的简单示例" class="headerlink" title="SPI的简单示例"></a>SPI的简单示例</h4><p>  首先第一步，定义一组接口：</p>
+<pre><code class="java">public interface Upload &#123;
+    void upload(String url);
+&#125;
+</code></pre>
+<p>  这个接口分别有两个实现：</p>
+<pre><code class="java">class UploadSmallFile implements Upload &#123;
+    @Override
+    public void upload(String url) &#123;
+        System.out.println(&quot;直接上传&quot;);
+    &#125;
+&#125;
+
+class UploadBigFile implements Upload &#123;
+
+    @Override
+    public void upload(String url) &#123;
+        System.out.println(&quot;分片上传&quot;);
+    &#125;
+&#125;
+</code></pre>
+<p>然后需要在resources目录下新建META-INF/services目录，并且在这个目录下新建一个与上述接口的全限定名一致的文件，在这个文件中写入接口的实现类的全限定名：</p>
+<p><img src="https://i.loli.net/2021/04/11/5NmdAM8iaOPtjU1.png" alt="image-20210411233948346"></p>
+<p><img src="https://i.loli.net/2021/04/11/6YqA2LZTiyzgJlW.png" alt="image-20210411234019074"></p>
+<p>  通过serviceLoader加载实现类并调用：</p>
+<pre><code class="java">public class Main &#123;
+    public static void main(String[] args) &#123;
+        ServiceLoader&lt;Upload&gt; uploads = ServiceLoader.load(Upload.class);
+        for(Upload upload: uploads)&#123;
+            upload.upload(&quot;https://iomurphy.github.io&quot;);
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>  输出：<br><img src="https://i.loli.net/2021/04/11/fjAuQrvM6cdiKRo.png" alt="image-20210411234252878"></p>
+<p>可以看到其中最为核心的就是通过ServiceLoader这个类来加载具体的实现类的。</p>
+<h4 id="SPI原理解析"><a href="#SPI原理解析" class="headerlink" title="SPI原理解析"></a>SPI原理解析</h4><p>   通过上面的demo，可以看到最关键的实现就是ServiceLoader这个类，可以看下这个类的源码，如下：</p>
+<pre><code class="java">public final class ServiceLoader&lt;S&gt; implements Iterable&lt;S&gt; &#123;
+
+    // 定义被扫描目录前缀
+    private static final String PREFIX = &quot;META-INF/services/&quot;;
+
+    // 被加载的类或接口
+    private final Class&lt;S&gt; service;
+
+    // 用于定位、加载和实例化实现方实现的类的类加载器
+    private final ClassLoader loader;
+
+    // 上下文对象
+    private final AccessControlContext acc;
+
+    // 按照实例化的顺序缓存已经实例化的类
+    private LinkedHashMap&lt;String, S&gt; providers = new LinkedHashMap&lt;&gt;();
+
+    // 懒查找迭代器
+    private java.util.ServiceLoader.LazyIterator lookupIterator;
+
+    // 私有内部类，提供对所有的service的类的加载与实例化
+    private class LazyIterator implements Iterator&lt;S&gt; &#123;
+        Class&lt;S&gt; service;
+        ClassLoader loader;
+        Enumeration&lt;URL&gt; configs = null;
+        String nextName = null;
+
+        //...
+        private boolean hasNextService() &#123;
+            if (configs == null) &#123;
+                try &#123;
+                    //获取目录下所有的类
+                    String fullName = PREFIX + service.getName();
+                    if (loader == null)
+                        configs = ClassLoader.getSystemResources(fullName);
+                    else
+                        configs = loader.getResources(fullName);
+                &#125; catch (IOException x) &#123;
+                    //...
+                &#125;
+                //....
+            &#125;
+        &#125;
+
+        private S nextService() &#123;
+            String cn = nextName;
+            nextName = null;
+            Class&lt;?&gt; c = null;
+            try &#123;
+                //反射加载类
+                c = Class.forName(cn, false, loader);
+            &#125; catch (ClassNotFoundException x) &#123;
+            &#125;
+            try &#123;
+                //实例化
+                S p = service.cast(c.newInstance());
+                //放进缓存
+                providers.put(cn, p);
+                return p;
+            &#125; catch (Throwable x) &#123;
+                //..
+            &#125;
+            //..
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>上面的代码只贴出了部分关键的实现，有兴趣的读者可以自己去研究，下面贴出比较直观的spi加载的主要流程供参考：</p>
+<h3 id="spring-boot的spi机制"><a href="#spring-boot的spi机制" class="headerlink" title="spring boot的spi机制"></a>spring boot的spi机制</h3><h4 id="SpringBootApplication"><a href="#SpringBootApplication" class="headerlink" title="@SpringBootApplication"></a>@SpringBootApplication</h4><p><code>@SpringBootApplication</code>  这个注解其实由三个注解构成</p>
+<pre><code class="java">// ....
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Inherited
+@SpringBootConfiguration
+@EnableAutoConfiguration
+@ComponentScan(excludeFilters = &#123; @Filter(type = FilterType.CUSTOM, classes = TypeExcludeFilter.class),
+        @Filter(type = FilterType.CUSTOM, classes = AutoConfigurationExcludeFilter.class) &#125;)
+public @interface SpringBootApplication &#123;
+    // ....
+&#125;
+</code></pre>
+<p>也就是<code>@SpringBootConfiguration</code>、<code>@EnableAutoConfiguration</code>、<code>@ComponentScan</code>，其中的<code>@EnableAutoConfiguration</code>便是我们讲的主角</p>
+<pre><code class="java">// ...
+@SuppressWarnings(&quot;deprecation&quot;)
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Inherited
+@AutoConfigurationPackage
+@Import(EnableAutoConfigurationImportSelector.class)
+public @interface EnableAutoConfiguration &#123;
+
+    String ENABLED_OVERRIDE_PROPERTY = &quot;spring.boot.enableautoconfiguration&quot;;
+
+    /**
+     * Exclude specific auto-configuration classes such that they will never be applied.
+     * @return the classes to exclude
+     */
+    Class&lt;?&gt;[] exclude() default &#123;&#125;;
+
+    /**
+     * Exclude specific auto-configuration class names such that they will never be
+     * applied.
+     * @return the class names to exclude
+     * @since 1.3.0
+     */
+    String[] excludeName() default &#123;&#125;;
+
+&#125;
+</code></pre>
+<h4 id="EnableAutoConfiguration"><a href="#EnableAutoConfiguration" class="headerlink" title="@EnableAutoConfiguration"></a>@EnableAutoConfiguration</h4><p><code>EnableAutoConfiguration</code>中最关键的要属<code>@Import(AutoConfigurationImportSelector.class)</code>，借助<code>AutoConfigurationImportSelector</code>，<code>@EnableAutoConfiguration</code>可以帮助<code>SpringBoot</code>应用将所有符合条件的<code>@Configuration</code>配置都加载到当前<code>SpringBoot</code>创建并使用的<code>IoC</code>容器。</p>
+<p>借助于Spring框架原有的一个工具类：SpringFactoriesLoader的支持，@EnableAutoConfiguration可以智能的自动配置功效才得以大功告成！</p>
+<p>AutoConfigurationImportSelector中的部分代码：</p>
+<pre><code class="java">public class AutoConfigurationImportSelector&#123;
+// ....
+    protected List&lt;String&gt; getCandidateConfigurations(AnnotationMetadata metadata, AnnotationAttributes attributes) &#123;
+        // 加载所有的@EnableAutoConfiguration的类并返回为候选人
+        List&lt;String&gt; configurations = SpringFactoriesLoader.loadFactoryNames(getSpringFactoriesLoaderFactoryClass(),
+                getBeanClassLoader());
+        Assert.notEmpty(configurations, &quot;No auto configuration classes found in META-INF/spring.factories. If you &quot;
+                + &quot;are using a custom packaging, make sure that file is correct.&quot;);
+        return configurations;
+    &#125;
+    /**
+     * Return the class used by &#123;@link SpringFactoriesLoader&#125; to load configuration
+     * candidates.
+     * @return the factory class
+     */
+    protected Class&lt;?&gt; getSpringFactoriesLoaderFactoryClass() &#123;
+        return EnableAutoConfiguration.class;
+    &#125;
+    // ....
+&#125;
+</code></pre>
+<p><code>SpringFactoriesLoader</code>实现：</p>
+<pre><code class="java">// ...
+public abstract class SpringFactoriesLoader &#123;
+
+   /**
+    * The location to look for factories.
+    * &lt;p&gt;Can be present in multiple JAR files.
+    */
+   public static final String FACTORIES_RESOURCE_LOCATION = &quot;META-INF/spring.factories&quot;;
+
+   private static final Log logger = LogFactory.getLog(SpringFactoriesLoader.class);
+
+
+   /**
+    * Load and instantiate the factory implementations of the given type from
+    * &#123;@value #FACTORIES_RESOURCE_LOCATION&#125;, using the given class loader.
+    * &lt;p&gt;The returned factories are sorted through &#123;@link AnnotationAwareOrderComparator&#125;.
+    * &lt;p&gt;If a custom instantiation strategy is required, use &#123;@link #loadFactoryNames&#125;
+    * to obtain all registered factory names.
+    * @param factoryClass the interface or abstract class representing the factory
+    * @param classLoader the ClassLoader to use for loading (can be &#123;@code null&#125; to use the default)
+    * @throws IllegalArgumentException if any factory implementation class cannot
+    * be loaded or if an error occurs while instantiating any factory
+    * @see #loadFactoryNames
+    */
+   public static &lt;T&gt; List&lt;T&gt; loadFactories(Class&lt;T&gt; factoryClass, ClassLoader classLoader) &#123;
+      Assert.notNull(factoryClass, &quot;&#39;factoryClass&#39; must not be null&quot;);
+      ClassLoader classLoaderToUse = classLoader;
+      if (classLoaderToUse == null) &#123;
+         classLoaderToUse = SpringFactoriesLoader.class.getClassLoader();
+      &#125;
+      List&lt;String&gt; factoryNames = loadFactoryNames(factoryClass, classLoaderToUse);
+      if (logger.isTraceEnabled()) &#123;
+         logger.trace(&quot;Loaded [&quot; + factoryClass.getName() + &quot;] names: &quot; + factoryNames);
+      &#125;
+      List&lt;T&gt; result = new ArrayList&lt;T&gt;(factoryNames.size());
+      for (String factoryName : factoryNames) &#123;
+         result.add(instantiateFactory(factoryName, factoryClass, classLoaderToUse));
+      &#125;
+      AnnotationAwareOrderComparator.sort(result);
+      return result;
+   &#125;
+
+   /**
+    * Load the fully qualified class names of factory implementations of the
+    * given type from &#123;@value #FACTORIES_RESOURCE_LOCATION&#125;, using the given
+    * class loader.
+    * @param factoryClass the interface or abstract class representing the factory
+    * @param classLoader the ClassLoader to use for loading resources; can be
+    * &#123;@code null&#125; to use the default
+    * @throws IllegalArgumentException if an error occurs while loading factory names
+    * @see #loadFactories
+    */
+   public static List&lt;String&gt; loadFactoryNames(Class&lt;?&gt; factoryClass, ClassLoader classLoader) &#123;
+      String factoryClassName = factoryClass.getName();
+      try &#123;
+         Enumeration&lt;URL&gt; urls = (classLoader != null ? classLoader.getResources(FACTORIES_RESOURCE_LOCATION) :
+               ClassLoader.getSystemResources(FACTORIES_RESOURCE_LOCATION));
+         List&lt;String&gt; result = new ArrayList&lt;String&gt;();
+         while (urls.hasMoreElements()) &#123;
+            URL url = urls.nextElement();
+            Properties properties = PropertiesLoaderUtils.loadProperties(new UrlResource(url));
+            String propertyValue = properties.getProperty(factoryClassName);
+            for (String factoryName : StringUtils.commaDelimitedListToStringArray(propertyValue)) &#123;
+               result.add(factoryName.trim());
+            &#125;
+         &#125;
+         return result;
+      &#125;
+      catch (IOException ex) &#123;
+         throw new IllegalArgumentException(&quot;Unable to load factories from location [&quot; +
+               FACTORIES_RESOURCE_LOCATION + &quot;]&quot;, ex);
+      &#125;
+   &#125;
+
+   @SuppressWarnings(&quot;unchecked&quot;)
+   private static &lt;T&gt; T instantiateFactory(String instanceClassName, Class&lt;T&gt; factoryClass, ClassLoader classLoader) &#123;
+      try &#123;
+         Class&lt;?&gt; instanceClass = ClassUtils.forName(instanceClassName, classLoader);
+         if (!factoryClass.isAssignableFrom(instanceClass)) &#123;
+            throw new IllegalArgumentException(
+                  &quot;Class [&quot; + instanceClassName + &quot;] is not assignable to [&quot; + factoryClass.getName() + &quot;]&quot;);
+         &#125;
+         Constructor&lt;?&gt; constructor = instanceClass.getDeclaredConstructor();
+         ReflectionUtils.makeAccessible(constructor);
+         return (T) constructor.newInstance();
+      &#125;
+      catch (Throwable ex) &#123;
+         throw new IllegalArgumentException(&quot;Unable to instantiate factory class: &quot; + factoryClass.getName(), ex);
+      &#125;
+   &#125;
+
+&#125;
+</code></pre>
+<p>在<code>AutoConfigurationImportSelector</code>类中可以看到通过<code>SpringFactoriesLoader.loadFactoryNames()</code><br>把 <code>META-INF/spring.factories</code>中每一个被<code>@EnableAutoConfiguration</code>注解的类都加载到容器中。每一个xxxAutoConfiguration文件一般都会有下面的条件注解:</p>
+<pre><code>@ConditionalOnClass ： classpath中存在该类时起效
+@ConditionalOnMissingClass ： classpath中不存在该类时起效
+@ConditionalOnBean ： DI容器中存在该类型Bean时起效
+@ConditionalOnMissingBean ： DI容器中不存在该类型Bean时起效
+@ConditionalOnSingleCandidate ： DI容器中该类型Bean只有一个或@Primary的只有一个时起效
+@ConditionalOnExpression ： SpEL表达式结果为true时
+@ConditionalOnProperty ： 参数设置或者值一致时起效
+@ConditionalOnResource ： 指定的文件存在时起效
+@ConditionalOnJndi ： 指定的JNDI存在时起效
+@ConditionalOnJava ： 指定的Java版本存在时起效
+@ConditionalOnWebApplication ： Web应用环境下起效
+@ConditionalOnNotWebApplication ： 非Web应用环境下起效
+</code></pre>
+<h4 id="SpringFactoriesLoader"><a href="#SpringFactoriesLoader" class="headerlink" title="SpringFactoriesLoader"></a>SpringFactoriesLoader</h4><p>SpringFactoriesLoader属于Spring框架私有的一种扩展方案(类似于Java的SPI方案java.util.ServiceLoader)，其主要功能就是从指定的配置文件META-INF/spring-factories加载配置，spring-factories是一个典型的properties文件，只不过key和value都是Java类型的全限定类名，举例：</p>
+<pre><code class="properties">example.MyService=example.MyServiceImpl1,example.MyServiceImpl2
+</code></pre>
+<p>对于<code>@EnableAutoConfiguration</code>来说，<code>SpringFactoriesLoader</code>的用途稍微不同一些，其本意是为了提供SPI扩展的场景，而在<code>@EnableAutoConfiguration</code>场景中，它更多提供了一种配置查找的功能支持，即根据<code>@EnableAutoConfiguration</code>的全限定类名<code>org.springframework.boot.autoconfig.EnableAutoConfiguration</code>作为查找的Key，获得对应的一组<code>@Configuration</code>类。</p>
+<p><code>SpringFactoriesLoader</code>是一个抽象类，类中定义的静态属性定义了其加载资源的路径<code>public static final String FACTORIES_RESOURCE_LOCATION = &quot;META-INF/spring.factories&quot;</code>，此外还有三个静态方法：</p>
+<pre><code>loadFactories：加载指定的factoryClass并进行实例化。
+loadFactoryNames：加载指定的factoryClass的名称集合。
+instantiateFactory：对指定的factoryClass进行实例化。
+在loadFactories方法中调用了loadFactoryNames以及instantiateFactory方法。
+</code></pre>
+<p>loadFactories方法首先获取类加载器，然后调用loadFactoryNames方法获取所有的指定资源的名称集合、接着调用instantiateFactory方法实例化这些资源类并将其添加到result集合中。最后调用AnnotationAwareOrderComparator.sort方法进行集合的排序。</p>
+<pre><code class="java">
+public static &lt;T&gt; List&lt;T&gt; loadFactories(Class&lt;T&gt; factoryClass, ClassLoader classLoader) &#123;
+   Assert.notNull(factoryClass, &quot;&#39;factoryClass&#39; must not be null&quot;);
+   ClassLoader classLoaderToUse = classLoader;
+   if (classLoaderToUse == null) &#123;
+      classLoaderToUse = SpringFactoriesLoader.class.getClassLoader();
+   &#125;
+   List&lt;String&gt; factoryNames = loadFactoryNames(factoryClass, classLoaderToUse);
+   if (logger.isTraceEnabled()) &#123;
+      logger.trace(&quot;Loaded [&quot; + factoryClass.getName() + &quot;] names: &quot; + factoryNames);
+   &#125;
+   List&lt;T&gt; result = new ArrayList&lt;T&gt;(factoryNames.size());
+   for (String factoryName : factoryNames) &#123;
+      result.add(instantiateFactory(factoryName, factoryClass, classLoaderToUse));
+   &#125;
+   AnnotationAwareOrderComparator.sort(result);
+   return result;
+&#125;
+</code></pre>
+<p>loadFactories方法首先获取类加载器，然后调用loadFactoryNames方法获取所有的指定资源的名称集合、接着调用instantiateFactory方法实例化这些资源类并将其添加到result集合中。最后调用AnnotationAwareOrderComparator.sort方法进行集合的排序。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>spi主要的作用：</p>
+<ul>
+<li>不需要改动源码就可以实现扩展，解耦。</li>
+<li>实现扩展对原来的代码几乎没有侵入性。</li>
+<li>只需要添加配置就可以实现扩展，符合开闭原则。</li>
+</ul>
+
+        
+    
+
+    
+</div>
+
+
+                
+
+                <!-- Post Comments -->
+                
+                    
+                
+            </div>
+
+            <!-- Post Prev & Next Nav -->
+            <nav class="material-nav mdl-color-text--grey-50 mdl-cell mdl-cell--12-col">
+    <!-- Prev Nav -->
+    
+        <a href="/2021/04/09/JAVA%E6%8A%9B%E5%BC%82%E5%B8%B8%E5%90%8E%E8%BF%9B%E7%A8%8B%E4%B8%8D%E9%80%80%E5%87%BA/" id="post_nav-newer" class="prev-content">
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_back</i>
+            </button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            新篇
+        </a>
+    
+
+    <!-- Section Spacer -->
+    <div class="section-spacer"></div>
+
+    <!-- Next Nav -->
+    
+        <a href="/2021/03/17/ERR-CONTENT-LENGTH-MISMATCH-%E5%88%86%E6%AE%B5%E4%B8%8B%E8%BD%BD%E5%86%85%E5%AE%B9%E9%95%BF%E5%BA%A6%E4%B8%8D%E5%8C%B9%E9%85%8D/" id="post_nav-older" class="next-content">
+            旧篇
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_forward</i>
+            </button>
+        </a>
+    
+</nav>
+
+        </div>
+    </div>
+
+
+
+                    
+                        <!-- Overlay For Active Sidebar -->
+<div class="sidebar-overlay"></div>
+
+<!-- Material sidebar -->
+<aside id="sidebar" class="sidebar sidebar-colored sidebar-fixed-left" role="navigation">
+    <div id="sidebar-main">
+        <!-- Sidebar Header -->
+        <div class="sidebar-header header-cover" style="background-image: url(/img/sidebar_header.png);">
+    <!-- Top bar -->
+    <div class="top-bar"></div>
+
+    <!-- Sidebar toggle button -->
+    <button type="button" class="sidebar-toggle mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" style="display: initial;" data-upgraded=",MaterialButton,MaterialRipple">
+        <i class="material-icons">clear_all</i>
+        <span class="mdl-button__ripple-container">
+            <span class="mdl-ripple">
+            </span>
+        </span>
+    </button>
+
+    <!-- Sidebar Avatar -->
+    <div class="sidebar-image">
+        <img src="/img/avatar.jpg" alt="Murphy's avatar">
+    </div>
+
+    <!-- Sidebar Email -->
+    <a data-toggle="dropdown" class="sidebar-brand" href="#settings-dropdown">
+        murphy-li@foxmail.com
+        <b class="caret"></b>
+    </a>
+</div>
+
+
+        <!-- Sidebar Navigation  -->
+        <ul class="nav sidebar-nav">
+    <!-- User dropdown  -->
+    <li class="dropdown">
+        <ul id="settings-dropdown" class="dropdown-menu">
+            
+                <li>
+                    <a href="mailto:murphy-li@foxmail.com" target="_blank" title="Email Me">
+                        
+                            <i class="material-icons sidebar-material-icons sidebar-indent-left1pc-element">email</i>
+                        
+                        Email Me
+                    </a>
+                </li>
+            
+        </ul>
+    </li>
+
+    <!-- Homepage -->
+    
+        <li id="sidebar-first-li">
+            <a href="/">
+                
+                    <i class="material-icons sidebar-material-icons">home</i>
+                
+                主页
+            </a>
+        </li>
+        
+    
+
+    <!-- Archives  -->
+    
+        <li class="dropdown">
+            <a href="#" class="ripple-effect dropdown-toggle" data-toggle="dropdown">
+                
+                    <i class="material-icons sidebar-material-icons">inbox</i>
+                
+                    归档
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+            <li>
+                <a class="sidebar_archives-link" href="/archives/2021/04/">四月 2021<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/archives/2021/03/">三月 2021<span class="sidebar_archives-count">3</span></a></li><li><a class="sidebar_archives-link" href="/archives/2021/02/">二月 2021<span class="sidebar_archives-count">4</span></a></li><li><a class="sidebar_archives-link" href="/archives/2020/12/">十二月 2020<span class="sidebar_archives-count">3</span></a>
+            </ul>
+        </li>
+        
+    
+
+    <!-- Categories  -->
+    
+        <li class="dropdown">
+            <a href="#" class="ripple-effect dropdown-toggle" data-toggle="dropdown">
+                
+                    <i class="material-icons sidebar-material-icons">chrome_reader_mode</i>
+                
+                分类
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                <a class="sidebar_archives-link" href="/categories/Hexo/">Hexo<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/categories/JVM/">JVM<span class="sidebar_archives-count">4</span></a></li><li><a class="sidebar_archives-link" href="/categories/Java%E5%9F%BA%E7%A1%80/">Java基础<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/categories/SPI/">SPI<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/categories/Zookeeper/">Zookeeper<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/categories/nginx/">nginx<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E7%90%86%E8%AE%BA/">分布式理论<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/categories/%E5%90%8D%E8%AF%8D%E8%A7%A3%E9%87%8A/">名词解释<span class="sidebar_archives-count">1</span></a>
+            </ul>
+        </li>
+        
+    
+
+    <!-- Pages  -->
+    
+
+    <!-- Article Number  -->
+    
+</ul>
+
+
+        <!-- Sidebar Footer -->
+        <!--
+I'm glad you use this theme, the development is no so easy, I hope you can keep the copyright, I will thank you so much.
+If you still want to delete the copyrights, could you still retain the first one? Which namely "Theme Material"
+It will not impact the appearance and can give developers a lot of support :)
+
+很高兴您使用并喜欢该主题，开发不易 十分谢谢与希望您可以保留一下版权声明。
+如果您仍然想删除的话 能否只保留第一项呢？即 "Theme Material"
+它不会影响美观并可以给开发者很大的支持和动力。 :)
+-->
+
+<!-- Sidebar Divider -->
+
+    <div class="sidebar-divider"></div>
+
+
+<!-- Theme Material -->
+
+    <a href="https://github.com/viosey/hexo-theme-material"  class="sidebar-footer-text-a" target="_blank">
+        <div class="sidebar-text mdl-button mdl-js-button mdl-js-ripple-effect sidebar-footer-text-div" data-upgraded=",MaterialButton,MaterialRipple">
+            主题 - Material
+            <span class="sidebar-badge badge-circle">i</span>
+        </div>
+    </a>
+
+
+<!-- Help & Support -->
+<!--
+
+-->
+
+<!-- Feedback -->
+<!--
+
+-->
+
+<!-- About Theme -->
+<!--
+
+-->
+
+    </div>
+
+    <!-- Sidebar Image -->
+    
+
+</aside>
+
+                    
+
+                    
+                        <!-- Footer Top Button -->
+                        <div id="back-to-top" class="toTop-wrap">
+    <a href="#top" class="toTop">
+        <i class="material-icons footer_top-i">expand_less</i>
+    </a>
+</div>
+
+                    
+
+                    <!--Footer-->
+<footer class="mdl-mini-footer" id="bottom">
+    
+        <!-- Paradox Footer Left Section -->
+        <div class="mdl-mini-footer--left-section sns-list">
+    <!-- Twitter -->
+    
+
+    <!-- Facebook -->
+    
+
+    <!-- Google + -->
+    
+
+    <!-- Weibo -->
+    
+
+    <!-- Instagram -->
+    
+
+    <!-- Tumblr -->
+    
+
+    <!-- Github -->
+    
+
+    <!-- LinkedIn -->
+    
+
+    <!-- Zhihu -->
+    
+
+    <!-- Bilibili -->
+    
+
+    <!-- Telegram -->
+    
+    
+    <!-- V2EX -->
+    
+</div>
+
+
+        <!--Copyright-->
+        <div id="copyright">
+            Copyright&nbsp;©<script type="text/javascript">var fd = new Date();document.write("&nbsp;" + fd.getFullYear() + "&nbsp;");</script>Murphy's Blog
+            
+        </div>
+
+        <!-- Paradox Footer Right Section -->
+
+        <!--
+        I am glad you use this theme, the development is no so easy, I hope you can keep the copyright.
+        It will not impact the appearance and can give developers a lot of support :)
+
+        很高兴您使用该主题，开发不易，希望您可以保留一下版权声明。
+        它不会影响美观并可以给开发者很大的支持。 :)
+        -->
+
+        <div class="mdl-mini-footer--right-section">
+            <div>
+                <div class="footer-develop-div">Powered by <a href="https://hexo.io" target="_blank" class="footer-develop-a">Hexo</a></div>
+                <div class="footer-develop-div">Theme - <a href="https://github.com/viosey/hexo-theme-material" target="_blank" class="footer-develop-a">Material</a></div>
+            </div>
+        </div>
+    
+</footer>
+
+
+                    <!-- Import JS File -->
+
+    <script>lsloader.load("lazyload_js","/js/lazyload.min.js?wgjW/HuQG9JDgvPDPoRAng==", true)</script>
+
+
+
+    <script>lsloader.load("js_js","/js/js.min.js?V/53wGualMuiPM3xoetD5Q==", true)</script>
+
+
+
+    <script>lsloader.load("np_js","/js/nprogress.js?pl3Qhb9lvqR1FlyLUna1Yw==", true)</script>
+
+
+<script type="text/ls-javascript" id="NProgress-script">
+    NProgress.configure({
+        showSpinner: true
+    });
+    NProgress.start();
+    $('#nprogress .bar').css({
+        'background': '#29d'
+    });
+    $('#nprogress .peg').css({
+        'box-shadow': '0 0 10px #29d, 0 0 15px #29d'
+    });
+    $('#nprogress .spinner-icon').css({
+        'border-top-color': '#29d',
+        'border-left-color': '#29d'
+    });
+    setTimeout(function() {
+        NProgress.done();
+        $('.fade').removeClass('out');
+    }, 800);
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- UC Browser Compatible -->
+<script>
+	var agent = navigator.userAgent.toLowerCase();
+	if(agent.indexOf('ucbrowser')>0) {
+		document.write('
+<link rel="stylesheet" href="/css/uc.css">
+');
+	   alert('由于 UC 浏览器使用极旧的内核，而本网站使用了一些新的特性。\n为了您能更好的浏览，推荐使用 Chrome 或 Firefox 浏览器。');
+	}
+</script>
+
+<!-- Import prettify js  -->
+
+    
+        
+            <script>lsloader.load("prettify_js","/js/prettify.min.js?WN07fivHQSMKWy7BmHBB6w==", true)</script>
+        
+    
+
+
+
+<!-- Window Load -->
+<!-- add class for prettify -->
+<script type="text/ls-javascript" id="window-load">
+    $(window).on('load', function() {
+        // Post_Toc parent position fixed
+        $('.post-toc-wrap').parent('.mdl-menu__container').css('position', 'fixed');
+    });
+
+    
+        
+            $(function() {
+                $('pre').addClass('prettyprint linenums').attr('style', 'overflow:auto;');
+                prettyPrint();
+                })
+        
+    
+    
+</script>
+
+<!-- MathJax Load-->
+
+
+<!-- Bing Background -->
+
+
+<script type="text/ls-javascript" id="lazy-load">
+    // Offer LazyLoad
+    queue.offer(function(){
+        $('.lazy').lazyload({
+            effect : 'show'
+        });
+    });
+
+    // Start Queue
+    $(document).ready(function(){
+        setInterval(function(){
+            queue.execNext();
+        },200);
+    });
+</script>
+
+<!-- Custom Footer -->
+
+
+
+<script>
+    (function(){
+        var scriptList = document.querySelectorAll('script[type="text/ls-javascript"]')
+
+        for (var i = 0; i < scriptList.length; ++i) {
+            var item = scriptList[i];
+            lsloader.runInlineScript(item.id,item.id);
+        }
+    })()
+console.log('\n %c © Material Theme | Version: 1.5.2 | https://github.com/viosey/hexo-theme-material %c \n', 'color:#455a64;background:#e0e0e0;padding:5px 0;border-top-left-radius:5px;border-bottom-left-radius:5px;', 'color:#455a64;background:#e0e0e0;padding:5px 0;border-top-right-radius:5px;border-bottom-right-radius:5px;');
+</script>
+
+                </main>
+            </div>
+        </body>
+    
+</html>
